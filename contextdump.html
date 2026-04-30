@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContextDump — LLM Context Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5f2;--surface:#ffffff;--surface2:#fafaf8;
+  --border:#e2e0db;--border2:#d0cec8;
+  --accent:#3b7c0f;--accent-h:#2d6009;
+  --accent-dim:rgba(59,124,15,.08);--accent-bright:rgba(59,124,15,.14);
+  --text:#1c1c1a;--text-dim:#5c5c58;--text-muted:#888882;--text-ghost:#bbbbb5;
+  --dir:#1d6fa4;--mono:'JetBrains Mono','Fira Code',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--mono)}
+body{display:flex;flex-direction:column}
+.hdr{height:46px;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-.03em;white-space:nowrap}
+.logo span{color:var(--text-dim);font-weight:400}
+.hdr-path{flex:1;font-size:11px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-path.live{color:var(--text)}
+.btn{padding:5px 13px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s,background .12s}
+.btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#ffffff}
+.btn.primary:hover:not(:disabled){background:var(--accent-h);border-color:var(--accent-h)}
+.btn:disabled{opacity:.3;cursor:default}
+.filters{height:34px;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;overflow-x:auto}
+.filters::-webkit-scrollbar{display:none}
+.flbl{font-size:10px;color:var(--text-ghost);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;margin-right:2px}
+.chip{padding:3px 9px;font-family:var(--mono);font-size:10px;border:1px solid var(--border2);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;white-space:nowrap;transition:all .12s;user-select:none}
+.chip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.main{flex:1;display:grid;grid-template-columns:290px 1fr;overflow:hidden}
+.tree-panel{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-hdr{height:30px;padding:0 10px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.panel-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.panel-btns{display:flex;gap:10px}
+.gbtn{font-family:var(--mono);font-size:10px;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;text-transform:uppercase;letter-spacing:.06em;transition:color .12s}
+.gbtn:hover{color:var(--text-dim)}
+.tree-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 0}
+.tree-scroll::-webkit-scrollbar{width:3px}
+.tree-scroll::-webkit-scrollbar-thumb{background:var(--border2)}
+.t-row{display:flex;align-items:center;gap:5px;padding:2px 8px;cursor:pointer;min-height:22px;transition:background .08s}
+.t-row:hover{background:rgba(255,255,255,.025)}
+.t-indent{display:inline-block;flex-shrink:0}
+.t-caret{width:12px;height:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-ghost);font-size:7px;transition:transform .12s}
+.t-caret.open{transform:rotate(90deg)}
+.t-cb{appearance:none;width:12px;height:12px;border:1px solid var(--border2);background:transparent;cursor:pointer;flex-shrink:0;position:relative;margin:0}
+.t-cb:checked{background:var(--accent);border-color:var(--accent)}
+.t-cb:checked::after{content:'';position:absolute;left:2px;top:0;width:4px;height:7px;border:1.5px solid #ffffff;border-top:none;border-left:none;transform:rotate(45deg)}
+.t-cb:indeterminate{border-color:var(--accent);background:var(--accent-bright)}
+.t-cb:indeterminate::after{content:'';position:absolute;left:2px;top:4.5px;width:6px;height:1.5px;background:var(--accent)}
+.t-icon{font-size:11px;width:15px;text-align:center;flex-shrink:0;line-height:1}
+.t-name{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.t-name.dir{color:var(--dir)}
+.t-name.file{color:var(--text)}
+.t-name.binary{color:var(--text-ghost)}
+.t-children{display:none}
+.t-children.open{display:block}
+.out-panel{display:flex;flex-direction:column;overflow:hidden}
+.out-bar{height:30px;padding:0 10px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.out-meta{flex:1;font-size:10px;color:var(--text-dim)}
+.out-meta .hi{color:var(--accent)}
+.flash{font-size:10px;color:var(--accent);opacity:0;transition:opacity .1s}
+.out-scroll{flex:1;overflow-y:auto;background:var(--surface2)}
+.out-scroll::-webkit-scrollbar{width:3px}
+.out-scroll::-webkit-scrollbar-thumb{background:var(--border2)}
+.out-inner{padding:14px 16px;min-height:100%}
+.out-pre{font-family:var(--mono);font-size:11px;line-height:1.65;white-space:pre-wrap;word-break:break-word;color:var(--text)}
+.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text-ghost);padding:40px;text-align:center}
+.empty-g{font-size:28px;line-height:1}
+.empty-t{font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+.empty-s{font-size:11px;color:var(--text-muted);line-height:1.7}
+kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px solid var(--border2);font-family:var(--mono);font-size:10px;border-radius:2px;color:var(--text-dim)}
+.statusbar{height:24px;padding:0 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;font-size:10px;color:var(--text-ghost);flex-shrink:0}
+.statusbar .hi{color:var(--accent)}
+.sep{color:var(--text-ghost)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.loading{padding:16px 12px;font-size:11px;color:var(--text-dim);animation:blink 1.2s ease-in-out infinite}
+.warn-bar{display:none;background:rgba(239,68,68,.12);border-bottom:1px solid rgba(239,68,68,.25);padding:8px 16px;font-size:11px;color:#fca5a5;text-align:center;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="warn-bar" id="warnBar">
+  Your browser does not support the File System Access API. Please use Chrome, Edge, or Arc 86+.
+</div>
+
+<div class="hdr">
+  <div class="logo">context<span>dump</span></div>
+  <div class="hdr-path" id="hdrPath">No folder open</div>
+  <button class="btn" id="btnOpen">Open Folder</button>
+  <button class="btn" id="btnRefresh" disabled>&#x21BA; Refresh</button>
+</div>
+
+<div class="filters">
+  <span class="flbl">Exclude:</span>
+  <button class="chip on" data-f="nodeModules">node_modules</button>
+  <button class="chip on" data-f="git">.git</button>
+  <button class="chip on" data-f="pycache">__pycache__ / .pyc</button>
+  <button class="chip on" data-f="buildDist">build / dist / out</button>
+  <button class="chip on" data-f="dotFiles">hidden / dot files</button>
+</div>
+
+<div class="main">
+  <div class="tree-panel">
+    <div class="panel-hdr">
+      <span class="panel-lbl">Files</span>
+      <div class="panel-btns">
+        <button class="gbtn" id="btnSelAll">Select All</button>
+        <button class="gbtn" id="btnClear">Clear</button>
+      </div>
+    </div>
+    <div class="tree-scroll" id="treeScroll">
+      <div class="empty">
+        <div class="empty-g">&#9647;</div>
+        <div class="empty-t">No folder open</div>
+        <div class="empty-s">Click <kbd>Open Folder</kbd><br>to browse your project</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="out-panel">
+    <div class="out-bar">
+      <div class="out-meta" id="outMeta"><span class="hi">0</span> files selected</div>
+      <div class="flash" id="flash">&#10003; Copied!</div>
+      <button class="btn" id="btnGen" disabled>Generate</button>
+      <button class="btn primary" id="btnCopy" disabled>Copy</button>
+    </div>
+    <div class="out-scroll">
+      <div class="out-inner" id="outInner">
+        <div class="empty">
+          <div class="empty-g">&#11041;</div>
+          <div class="empty-t">Nothing generated yet</div>
+          <div class="empty-s">Select files from the tree<br>then click <kbd>Generate</kbd></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span id="stFiles"><span class="hi">0</span> files</span>
+  <span class="sep">/</span>
+  <span id="stSel"><span class="hi">0</span> selected</span>
+  <span class="sep">/</span>
+  <span id="stChars"><span class="hi">0</span> chars</span>
+  <span class="sep">/</span>
+  <span id="stTok">approx <span class="hi">0</span> tokens</span>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────
+let rootHandle = null;
+let treeData   = null;
+let fileMap    = {};
+let selected   = new Set();
+let allPaths   = [];
+let outputText = '';
+
+const filters = { nodeModules:true, git:true, pycache:true, buildDist:true, dotFiles:true };
+
+const BINARY_EXT = new Set([
+  'png','jpg','jpeg','gif','webp','ico','bmp','tiff','svg',
+  'mp4','mov','avi','mkv','webm','mp3','wav','ogg','flac',
+  'zip','tar','gz','bz2','7z','rar','jar','war',
+  'pdf','doc','docx','xls','xlsx','ppt','pptx',
+  'exe','dll','so','dylib','bin','dat','db','sqlite','pkl',
+  'woff','woff2','ttf','eot','otf','class','pyc','pyo',
+]);
+
+const EXT_LANG = {
+  py:'python', js:'javascript', mjs:'javascript', cjs:'javascript',
+  ts:'typescript', jsx:'jsx', tsx:'tsx',
+  html:'html', htm:'html', css:'css', scss:'scss', sass:'sass', less:'less',
+  json:'json', jsonc:'json', md:'markdown', mdx:'mdx',
+  yml:'yaml', yaml:'yaml', sh:'bash', bash:'bash', zsh:'bash', fish:'bash', ps1:'powershell',
+  rs:'rust', go:'go', java:'java', cpp:'cpp', cc:'cpp', cxx:'cpp', c:'c', h:'c', hpp:'cpp',
+  rb:'ruby', php:'php', swift:'swift', kt:'kotlin', kts:'kotlin',
+  sql:'sql', graphql:'graphql', gql:'graphql',
+  r:'r', lua:'lua', dart:'dart', vue:'vue', svelte:'svelte',
+  toml:'toml', xml:'xml', tf:'hcl', tfvars:'hcl', prisma:'prisma',
+  env:'bash', lock:'', txt:'', log:'', csv:'', ini:'ini', conf:'',
+};
+
+const ICONS = {
+  py:'Py', js:'JS', mjs:'JS', ts:'TS', jsx:'Jx', tsx:'Tx',
+  html:'HT', htm:'HT', css:'CS', scss:'CS', sass:'CS',
+  json:'{}', md:'MD', mdx:'MD', yml:'YM', yaml:'YM',
+  sh:'$_', bash:'$_', rs:'Rs', go:'Go', java:'Jv',
+  rb:'Rb', php:'Ph', swift:'Sw', kt:'Kt', sql:'DB',
+  vue:'Vu', svelte:'Sv', graphql:'GQ', gql:'GQ', tf:'TF',
+  env:'EV', dockerfile:'Dk', lock:'LK', csv:'CV',
+};
+
+const BUILD_DIRS = new Set([
+  'build','dist','out','.next','.nuxt','target','.output',
+  '__sapper__','.vercel','.cache','coverage','.turbo','storybook-static','__pycache__'
+]);
+
+// ── Filter ─────────────────────────────────────────────
+function shouldExclude(name) {
+  const low = name.toLowerCase();
+  if (filters.nodeModules && name === 'node_modules') return true;
+  if (filters.git && name === '.git') return true;
+  if (filters.pycache && (name === '__pycache__' || low.endsWith('.pyc') || low.endsWith('.pyo'))) return true;
+  if (filters.buildDist && BUILD_DIRS.has(low)) return true;
+  if (filters.dotFiles && name.startsWith('.') && name !== '.env' && name !== '.env.example' && name !== '.env.local') return true;
+  return false;
+}
+
+// ── Directory traversal ────────────────────────────────
+async function buildTree(dirHandle, relPath) {
+  const node = {
+    name: dirHandle.name, type: 'dir',
+    path: relPath, handle: dirHandle,
+    children: [], expanded: true
+  };
+  const entries = [];
+  for await (const [n, h] of dirHandle.entries()) entries.push({ name:n, handle:h });
+  entries.sort((a,b) => {
+    const ad = a.handle.kind==='directory', bd = b.handle.kind==='directory';
+    if (ad !== bd) return ad ? -1 : 1;
+    return a.name.localeCompare(b.name, undefined, { sensitivity:'base' });
+  });
+  for (const { name, handle } of entries) {
+    if (shouldExclude(name)) continue;
+    const cp = relPath + '/' + name;
+    if (handle.kind === 'directory') {
+      const child = await buildTree(handle, cp);
+      child.expanded = false;
+      node.children.push(child);
+    } else {
+      node.children.push({ name, type:'file', path:cp, handle });
+      fileMap[cp] = handle;
+    }
+  }
+  return node;
+}
+
+function collectFiles(node, out=[]) {
+  if (node.type === 'file') { out.push(node.path); return out; }
+  for (const c of node.children) collectFiles(c, out);
+  return out;
+}
+
+// ── Tree rendering ─────────────────────────────────────
+function getExt(name) {
+  const low = name.toLowerCase();
+  if (low==='dockerfile' || low==='makefile' || low==='rakefile') return low;
+  const d = name.lastIndexOf('.');
+  return d > 0 ? name.slice(d+1).toLowerCase() : '';
+}
+
+function renderNode(node, depth) {
+  const wrap = document.createElement('div');
+  const row  = document.createElement('div');
+  row.className = 't-row';
+  row.dataset.path = node.path;
+  row.dataset.kind = node.type;
+
+  // indent
+  const ind = document.createElement('span');
+  ind.className = 't-indent';
+  ind.style.width = (depth * 14) + 'px';
+  row.appendChild(ind);
+
+  if (node.type === 'dir') {
+    const caret = document.createElement('span');
+    caret.className = 't-caret' + (node.expanded ? ' open' : '');
+    caret.textContent = '\u25B6';
+    row.appendChild(caret);
+
+    const cb = createCb();
+    syncDirCb(cb, node);
+    row.appendChild(cb);
+
+    const icon = document.createElement('span');
+    icon.className = 't-icon';
+    icon.textContent = depth === 0 ? '\uD83D\uDDC2' : '\uD83D\uDCC1';
+    row.appendChild(icon);
+
+    const nm = document.createElement('span');
+    nm.className = 't-name dir';
+    nm.textContent = node.name + '/';
+    row.appendChild(nm);
+    wrap.appendChild(row);
+
+    const kids = document.createElement('div');
+    kids.className = 't-children' + (node.expanded ? ' open' : '');
+    for (const c of node.children) kids.appendChild(renderNode(c, depth+1));
+    wrap.appendChild(kids);
+
+    row.addEventListener('click', e => {
+      if (e.target === cb) return;
+      node.expanded = !node.expanded;
+      caret.classList.toggle('open', node.expanded);
+      kids.classList.toggle('open', node.expanded);
+    });
+
+    cb.addEventListener('change', e => {
+      e.stopPropagation();
+      const files = collectFiles(node);
+      cb.checked ? files.forEach(p => selected.add(p)) : files.forEach(p => selected.delete(p));
+      refreshAllCbs(); updateStatus();
+    });
+
+  } else {
+    const ext = getExt(node.name);
+    const isBin = BINARY_EXT.has(ext);
+
+    const spacer = document.createElement('span');
+    spacer.style.cssText = 'width:12px;flex-shrink:0;display:inline-block';
+    row.appendChild(spacer);
+
+    const cb = createCb();
+    cb.checked = selected.has(node.path);
+    if (isBin) cb.disabled = true;
+    row.appendChild(cb);
+
+    const icon = document.createElement('span');
+    icon.className = 't-icon';
+    const lbl = ICONS[ext];
+    icon.textContent = lbl || '\u00B7';
+    icon.style.cssText = 'font-size:9px;font-weight:700;color:' + (isBin ? 'var(--text-ghost)' : 'var(--text-muted)');
+    row.appendChild(icon);
+
+    const nm = document.createElement('span');
+    nm.className = 't-name ' + (isBin ? 'binary' : 'file');
+    nm.textContent = node.name;
+    if (isBin) nm.title = 'Binary file \u2013 skipped';
+    row.appendChild(nm);
+    wrap.appendChild(row);
+
+    if (!isBin) {
+      cb.addEventListener('change', e => {
+        e.stopPropagation();
+        cb.checked ? selected.add(node.path) : selected.delete(node.path);
+        refreshAllCbs(); updateStatus();
+      });
+      row.addEventListener('click', e => {
+        if (e.target === cb) return;
+        cb.checked = !cb.checked; cb.dispatchEvent(new Event('change'));
+      });
+    }
+  }
+  return wrap;
+}
+
+function createCb() {
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.className = 't-cb';
+  return cb;
+}
+
+function syncDirCb(cb, node) {
+  const files = collectFiles(node).filter(p => !BINARY_EXT.has(getExt(p.split('/').pop())));
+  if (!files.length) { cb.checked = false; cb.indeterminate = false; return; }
+  const n = files.filter(p => selected.has(p)).length;
+  cb.indeterminate = false;
+  if (n === 0) cb.checked = false;
+  else if (n === files.length) cb.checked = true;
+  else { cb.checked = false; cb.indeterminate = true; }
+}
+
+function findNodeByPath(node, path) {
+  if (node.path === path) return node;
+  if (node.type === 'dir') for (const c of node.children) { const f = findNodeByPath(c,path); if(f) return f; }
+  return null;
+}
+
+function refreshAllCbs() {
+  document.querySelectorAll('.t-row').forEach(row => {
+    const cb = row.querySelector('.t-cb');
+    if (!cb || cb.disabled) return;
+    if (row.dataset.kind === 'dir') {
+      const n = findNodeByPath(treeData, row.dataset.path);
+      if (n) syncDirCb(cb, n);
+    } else {
+      cb.checked = selected.has(row.dataset.path);
+    }
+  });
+}
+
+// ── Load & render ──────────────────────────────────────
+async function loadFolder() {
+  treeScroll.innerHTML = '<div class="loading">Scanning directory...</div>';
+  fileMap = {}; selected.clear(); outputText = '';
+  treeData = await buildTree(rootHandle, rootHandle.name);
+  allPaths = collectFiles(treeData).filter(p => !BINARY_EXT.has(getExt(p.split('/').pop())));
+  treeScroll.innerHTML = '';
+  treeScroll.appendChild(renderNode(treeData, 0));
+  resetOutput();
+  updateStatus();
+}
+
+// ── Output generation ──────────────────────────────────
+function getLang(filename) {
+  const low = filename.toLowerCase();
+  if (low === 'dockerfile') return 'dockerfile';
+  if (low === 'makefile') return 'makefile';
+  return EXT_LANG[getExt(filename)] ?? '';
+}
+
+async function generateOutput() {
+  const paths = [...selected].filter(p => !BINARY_EXT.has(getExt(p.split('/').pop()))).sort();
+  if (!paths.length) return '';
+  const parts = [];
+  for (const path of paths) {
+    const h = fileMap[path];
+    if (!h) continue;
+    try {
+      const file = await h.getFile();
+      const content = await file.text();
+      const lang = getLang(h.name);
+      parts.push('`' + path + '`\n```' + lang + '\n' + content + '\n```');
+    } catch(err) {
+      parts.push('`' + path + '`\n[Error reading file: ' + err.message + ']');
+    }
+  }
+  return parts.join('\n\n---\n\n');
+}
+
+// ── Status & UI ────────────────────────────────────────
+function updateStatus() {
+  const sel = [...selected].filter(p => !BINARY_EXT.has(getExt(p.split('/').pop()))).length;
+  const chars = outputText.length;
+  const tok = Math.round(chars / 4);
+  stFiles.innerHTML  = '<span class="hi">' + allPaths.length + '</span> files';
+  stSel.innerHTML    = '<span class="hi">' + sel + '</span> selected';
+  stChars.innerHTML  = '<span class="hi">' + chars.toLocaleString() + '</span> chars';
+  stTok.innerHTML    = 'approx <span class="hi">' + tok.toLocaleString() + '</span> tokens';
+  outMeta.innerHTML  = '<span class="hi">' + sel + '</span> file' + (sel!==1?'s':'') + ' selected';
+  btnGen.disabled    = sel === 0;
+}
+
+function resetOutput() {
+  outputText = '';
+  outInner.innerHTML = '<div class="empty"><div class="empty-g">&#11041;</div><div class="empty-t">Nothing generated yet</div><div class="empty-s">Select files from the tree<br>then click <kbd>Generate</kbd></div></div>';
+  btnCopy.disabled = true;
+  updateStatus();
+}
+
+// ── Events ─────────────────────────────────────────────
+const treeScroll = document.getElementById('treeScroll');
+const outInner   = document.getElementById('outInner');
+const hdrPath    = document.getElementById('hdrPath');
+const outMeta    = document.getElementById('outMeta');
+const flash      = document.getElementById('flash');
+const btnOpen    = document.getElementById('btnOpen');
+const btnRefresh = document.getElementById('btnRefresh');
+const btnGen     = document.getElementById('btnGen');
+const btnCopy    = document.getElementById('btnCopy');
+const btnSelAll  = document.getElementById('btnSelAll');
+const btnClear   = document.getElementById('btnClear');
+const stFiles    = document.getElementById('stFiles');
+const stSel      = document.getElementById('stSel');
+const stChars    = document.getElementById('stChars');
+const stTok      = document.getElementById('stTok');
+
+if (!('showDirectoryPicker' in window)) {
+  document.getElementById('warnBar').style.display = 'block';
+}
+
+btnOpen.addEventListener('click', async () => {
+  try {
+    rootHandle = await window.showDirectoryPicker({ mode:'read' });
+    hdrPath.textContent = rootHandle.name;
+    hdrPath.classList.add('live');
+    btnRefresh.disabled = false;
+    await loadFolder();
+  } catch(e) { if(e.name !== 'AbortError') console.error(e); }
+});
+
+btnRefresh.addEventListener('click', async () => {
+  if (!rootHandle) return;
+  const prev = [...selected];
+  btnRefresh.disabled = true;
+  btnRefresh.textContent = 'Refreshing...';
+  await loadFolder();
+  // restore selections that still exist
+  prev.forEach(p => { if (fileMap[p]) selected.add(p); });
+  refreshAllCbs(); updateStatus();
+  btnRefresh.disabled = false;
+  btnRefresh.textContent = '\u21BA Refresh';
+});
+
+btnGen.addEventListener('click', async () => {
+  if (!selected.size) return;
+  btnGen.disabled = true;
+  btnGen.textContent = 'Reading...';
+  outputText = await generateOutput();
+  outInner.innerHTML = '';
+  const pre = document.createElement('pre');
+  pre.className = 'out-pre';
+  pre.textContent = outputText;
+  outInner.appendChild(pre);
+  btnCopy.disabled = false;
+  btnGen.disabled = false;
+  btnGen.textContent = 'Generate';
+  updateStatus();
+});
+
+btnCopy.addEventListener('click', async () => {
+  if (!outputText) return;
+  try {
+    await navigator.clipboard.writeText(outputText);
+    flash.style.opacity = '1';
+    setTimeout(() => { flash.style.opacity = '0'; }, 2000);
+  } catch(e) {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = outputText; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    flash.style.opacity = '1';
+    setTimeout(() => { flash.style.opacity = '0'; }, 2000);
+  }
+});
+
+btnSelAll.addEventListener('click', () => {
+  allPaths.forEach(p => selected.add(p));
+  refreshAllCbs(); updateStatus();
+});
+
+btnClear.addEventListener('click', () => {
+  selected.clear(); refreshAllCbs(); resetOutput();
+});
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', async () => {
+    const key = chip.dataset.f;
+    filters[key] = !filters[key];
+    chip.classList.toggle('on', filters[key]);
+    if (rootHandle) await loadFolder();
+  });
+});
+
+updateStatus();
+</script>
+</body>
+</html>
