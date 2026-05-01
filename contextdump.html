@@ -466,12 +466,19 @@ if (!('showDirectoryPicker' in window)) {
 
 btnOpen.addEventListener('click', async () => {
   try {
-    rootHandle = await window.showDirectoryPicker({ mode:'read' });
+    rootHandle = await window.showDirectoryPicker({
+      mode: 'read',
+      id: 'contextdump-open-folder',
+      startIn: rootHandle || 'desktop'
+    });
+
     hdrPath.textContent = rootHandle.name;
     hdrPath.classList.add('live');
     btnRefresh.disabled = false;
     await loadFolder();
-  } catch(e) { if(e.name !== 'AbortError') console.error(e); }
+  } catch(e) {
+    if(e.name !== 'AbortError') console.error(e);
+  }
 });
 
 btnRefresh.addEventListener('click', async () => {
