@@ -7,79 +7,95 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f5f2;--surface:#ffffff;--surface2:#fafaf8;
-  --border:#e2e0db;--border2:#d0cec8;
-  --accent:#3b7c0f;--accent-h:#2d6009;
-  --accent-dim:rgba(59,124,15,.08);--accent-bright:rgba(59,124,15,.14);
-  --text:#1c1c1a;--text-dim:#5c5c58;--text-muted:#888882;--text-ghost:#bbbbb5;
-  --dir:#1d6fa4;--mono:'JetBrains Mono','Fira Code',monospace;
+  --bg:#f6f6f4;--surface:#ffffff;--surface2:#fbfbfa;
+  --border:#e7e6e3;--border2:#d7d5d1;
+  --accent:#6f5bd3;--accent-h:#5f4bc2;
+  --accent-dim:rgba(111,91,211,.08);--accent-bright:rgba(111,91,211,.14);
+  --text:#202022;--text-dim:#626166;--text-muted:#8b898f;--text-ghost:#b9b7bc;
+  --success:#27864a;--danger:#b83b42;--mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  --tree-width:295px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--mono)}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
 body{display:flex;flex-direction:column}
-.hdr{height:46px;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-.03em;white-space:nowrap}
-.logo span{color:var(--text-dim);font-weight:400}
-.hdr-path{flex:1;font-size:11px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hdr-path.live{color:var(--text)}
-.btn{padding:5px 13px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s,background .12s}
-.btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#ffffff}
-.btn.primary:hover:not(:disabled){background:var(--accent-h);border-color:var(--accent-h)}
-.btn:disabled{opacity:.3;cursor:default}
-.filters{height:34px;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;overflow-x:auto}
+body.resizing{cursor:col-resize;user-select:none}
+.hdr{height:52px;padding:0 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.025em;white-space:nowrap}
+.logo span{color:var(--text-muted);font-weight:500}
+.hdr-path{flex:1;font-family:var(--mono);font-size:11px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-path.live{color:var(--text-dim)}
+.btn{height:30px;padding:0 12px;font-family:var(--sans);font-size:11px;font-weight:600;border:1px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s,background .12s,box-shadow .12s}
+.btn:hover:not(:disabled){border-color:#b9b3d8;color:var(--accent);background:#fdfcff}
+.btn:focus-visible,.chip:focus-visible,.gbtn:focus-visible,.seg:focus-visible,.t-cb:focus-visible{outline:2px solid rgba(111,91,211,.28);outline-offset:2px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#ffffff;box-shadow:0 1px 2px rgba(32,32,34,.08)}
+.btn.primary:hover:not(:disabled){background:var(--accent-h);border-color:var(--accent-h);color:#fff}
+.btn:disabled{opacity:.38;cursor:default}
+.filters{height:38px;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;overflow-x:auto}
 .filters::-webkit-scrollbar{display:none}
-.flbl{font-size:10px;color:var(--text-ghost);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;margin-right:2px}
-.chip{padding:3px 9px;font-family:var(--mono);font-size:10px;border:1px solid var(--border2);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;white-space:nowrap;transition:all .12s;user-select:none}
-.chip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-.main{flex:1;display:grid;grid-template-columns:290px 1fr;overflow:hidden}
-.tree-panel{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.panel-hdr{height:30px;padding:0 10px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.panel-lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
-.panel-btns{display:flex;gap:10px}
-.gbtn{font-family:var(--mono);font-size:10px;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;text-transform:uppercase;letter-spacing:.06em;transition:color .12s}
-.gbtn:hover{color:var(--text-dim)}
-.tree-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 0}
-.tree-scroll::-webkit-scrollbar{width:3px}
-.tree-scroll::-webkit-scrollbar-thumb{background:var(--border2)}
-.t-row{display:flex;align-items:center;gap:5px;padding:2px 8px;cursor:pointer;min-height:22px;transition:background .08s}
-.t-row:hover{background:rgba(255,255,255,.025)}
+.flbl{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;margin-right:4px}
+.chip{height:24px;padding:0 9px;font-family:var(--mono);font-size:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text-dim);cursor:pointer;border-radius:6px;white-space:nowrap;transition:border-color .12s,color .12s,background .12s;user-select:none}
+.chip:hover{border-color:#c7c3d6}
+.chip.on{border-color:#c9c1f0;color:var(--accent);background:var(--accent-dim)}
+.main{flex:1;display:grid;grid-template-columns:var(--tree-width) 6px minmax(0,1fr);overflow:hidden;min-height:0}
+.tree-panel{display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
+.pane-divider{position:relative;background:var(--border);cursor:col-resize;touch-action:none}
+.pane-divider::after{content:'';position:absolute;inset:0 -3px;z-index:2}
+.pane-divider:hover,.pane-divider.dragging{background:#c9c1ef}
+.panel-hdr{height:36px;padding:0 11px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.panel-lbl{font-size:10px;font-weight:650;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+.panel-btns{display:flex;gap:12px}
+.gbtn{font-family:var(--sans);font-size:10px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:3px 0;transition:color .12s}
+.gbtn:hover{color:var(--accent)}
+.tree-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 0;background:var(--surface)}
+.tree-scroll::-webkit-scrollbar,.out-scroll::-webkit-scrollbar{width:7px}
+.tree-scroll::-webkit-scrollbar-thumb,.out-scroll::-webkit-scrollbar-thumb{background:#d9d7d3;border:2px solid transparent;background-clip:padding-box;border-radius:7px}
+.t-row{display:flex;align-items:center;gap:5px;padding:2px 9px;cursor:pointer;min-height:24px;transition:background .08s}
+.t-row:hover{background:#f7f6f9}
 .t-indent{display:inline-block;flex-shrink:0}
 .t-caret{width:12px;height:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-ghost);font-size:7px;transition:transform .12s}
 .t-caret.open{transform:rotate(90deg)}
-.t-cb{appearance:none;width:12px;height:12px;border:1px solid var(--border2);background:transparent;cursor:pointer;flex-shrink:0;position:relative;margin:0}
+.t-cb{appearance:none;width:13px;height:13px;border:1px solid #c9c7cc;border-radius:3px;background:var(--surface);cursor:pointer;flex-shrink:0;position:relative;margin:0}
 .t-cb:checked{background:var(--accent);border-color:var(--accent)}
-.t-cb:checked::after{content:'';position:absolute;left:2px;top:0;width:4px;height:7px;border:1.5px solid #ffffff;border-top:none;border-left:none;transform:rotate(45deg)}
+.t-cb:checked::after{content:'';position:absolute;left:3px;top:1px;width:4px;height:7px;border:1.5px solid #ffffff;border-top:none;border-left:none;transform:rotate(45deg)}
 .t-cb:indeterminate{border-color:var(--accent);background:var(--accent-bright)}
-.t-cb:indeterminate::after{content:'';position:absolute;left:2px;top:4.5px;width:6px;height:1.5px;background:var(--accent)}
-.t-icon{font-size:11px;width:15px;text-align:center;flex-shrink:0;line-height:1}
-.t-name{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.t-name.dir{color:var(--dir)}
+.t-cb:indeterminate::after{content:'';position:absolute;left:3px;top:5px;width:5px;height:1.5px;background:var(--accent)}
+.t-cb:disabled{cursor:default;background:#f4f3f1}
+.t-icon{font-family:var(--mono);font-size:10px;width:17px;text-align:center;flex-shrink:0;line-height:1}
+.t-name{font-family:var(--mono);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.t-name.dir{color:#4e4c53;font-weight:500}
 .t-name.file{color:var(--text)}
 .t-name.binary{color:var(--text-ghost)}
 .t-children{display:none}
 .t-children.open{display:block}
-.out-panel{display:flex;flex-direction:column;overflow:hidden}
-.out-bar{height:30px;padding:0 10px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.out-meta{flex:1;font-size:10px;color:var(--text-dim)}
-.out-meta .hi{color:var(--accent)}
-.flash{font-size:10px;color:var(--accent);opacity:0;transition:opacity .1s}
+.out-panel{display:flex;flex-direction:column;overflow:hidden;background:var(--surface2);min-width:0}
+.out-bar{min-height:44px;padding:6px 10px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tree-option{display:flex;align-items:center;gap:7px;margin-right:3px;white-space:nowrap}
+.opt-label{font-size:10px;font-weight:600;color:var(--text-muted)}
+.segmented{display:inline-flex;padding:2px;background:#f2f1f3;border:1px solid var(--border);border-radius:7px}
+.seg{height:23px;padding:0 8px;border:0;border-radius:5px;background:transparent;font-family:var(--sans);font-size:10px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
+.seg:hover{color:var(--text-dim)}
+.seg.on{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(32,32,34,.08)}
+.out-meta{flex:1;min-width:90px;font-size:10.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.out-meta .hi,.statusbar .hi{font-family:var(--mono);color:var(--text-dim);font-weight:500}
+.output-state{display:none;padding:3px 7px;border:1px solid var(--border2);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.03em;color:var(--text-muted);background:var(--surface2)}
+.output-state.current,.output-state.outdated{display:inline-flex}
+.output-state.current{color:var(--text-dim)}
+.output-state.outdated{color:var(--accent);background:var(--accent-dim);border-color:#d8d1f5}
+.flash{font-size:10px;font-weight:650;color:var(--success);opacity:0;transition:opacity .1s;white-space:nowrap}
 .out-scroll{flex:1;overflow-y:auto;background:var(--surface2)}
-.out-scroll::-webkit-scrollbar{width:3px}
-.out-scroll::-webkit-scrollbar-thumb{background:var(--border2)}
-.out-inner{padding:14px 16px;min-height:100%}
+.out-inner{padding:18px 20px;min-height:100%}
 .out-pre{font-family:var(--mono);font-size:11px;line-height:1.65;white-space:pre-wrap;word-break:break-word;color:var(--text)}
-.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text-ghost);padding:40px;text-align:center}
-.empty-g{font-size:28px;line-height:1}
-.empty-t{font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
-.empty-s{font-size:11px;color:var(--text-muted);line-height:1.7}
-kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px solid var(--border2);font-family:var(--mono);font-size:10px;border-radius:2px;color:var(--text-dim)}
-.statusbar{height:24px;padding:0 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;font-size:10px;color:var(--text-ghost);flex-shrink:0}
-.statusbar .hi{color:var(--accent)}
-.sep{color:var(--text-ghost)}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.loading{padding:16px 12px;font-size:11px;color:var(--text-dim);animation:blink 1.2s ease-in-out infinite}
-.warn-bar{display:none;background:rgba(239,68,68,.12);border-bottom:1px solid rgba(239,68,68,.25);padding:8px 16px;font-size:11px;color:#fca5a5;text-align:center;flex-shrink:0}
+.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:var(--text-ghost);padding:40px;text-align:center}
+.empty-g{font-family:var(--mono);font-size:25px;line-height:1;color:#c8c5cc}
+.empty-t{font-size:12px;font-weight:650;color:var(--text-dim);letter-spacing:-.01em}
+.empty-s{font-size:11px;color:var(--text-muted);line-height:1.65}
+kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px solid var(--border2);font-family:var(--mono);font-size:10px;border-radius:4px;color:var(--text-dim);box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.statusbar{height:26px;padding:0 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:9.5px;color:var(--text-muted);flex-shrink:0}
+.sep{color:#d0ced3}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.42}}
+.loading{padding:16px 12px;font-family:var(--mono);font-size:11px;color:var(--text-dim);animation:blink 1.2s ease-in-out infinite}
+.warn-bar{display:none;background:#fff4f4;border-bottom:1px solid #efc7ca;padding:8px 16px;font-size:11px;color:var(--danger);text-align:center;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -122,12 +138,23 @@ kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px so
     </div>
   </div>
 
+  <div class="pane-divider" id="paneDivider" role="separator" aria-orientation="vertical" aria-label="Resize repository pane"></div>
+
   <div class="out-panel">
     <div class="out-bar">
+      <div class="tree-option">
+        <span class="opt-label">Repository tree</span>
+        <div class="segmented" role="group" aria-label="Repository tree in generated dump">
+          <button class="seg on" data-tree-mode="selected" aria-pressed="true">Selected only</button>
+          <button class="seg" data-tree-mode="full" aria-pressed="false">Full project</button>
+        </div>
+      </div>
       <div class="out-meta" id="outMeta"><span class="hi">0</span> files selected</div>
+      <span class="output-state" id="outputState"></span>
       <div class="flash" id="flash">&#10003; Copied!</div>
       <button class="btn" id="btnGen" disabled>Generate</button>
       <button class="btn primary" id="btnCopy" disabled>Copy</button>
+      <button class="btn" id="btnDownload" disabled>Download</button>
     </div>
     <div class="out-scroll">
       <div class="out-inner" id="outInner">
@@ -159,6 +186,10 @@ let fileMap    = {};
 let selected   = new Set();
 let allPaths   = [];
 let outputText = '';
+let outputStatus = 'not-generated';
+let treeMode = 'selected';
+let generationVersion = 0;
+let isGenerating = false;
 
 const filters = { nodeModules:true, git:true, pycache:true, buildDist:true, dotFiles:true };
 
@@ -304,6 +335,7 @@ function renderNode(node, depth) {
       e.stopPropagation();
       const files = collectFiles(node);
       cb.checked ? files.forEach(p => selected.add(p)) : files.forEach(p => selected.delete(p));
+      markOutputStale();
       refreshAllCbs(); updateStatus();
     });
 
@@ -338,6 +370,7 @@ function renderNode(node, depth) {
       cb.addEventListener('change', e => {
         e.stopPropagation();
         cb.checked ? selected.add(node.path) : selected.delete(node.path);
+        markOutputStale();
         refreshAllCbs(); updateStatus();
       });
       row.addEventListener('click', e => {
@@ -387,12 +420,11 @@ function refreshAllCbs() {
 // ── Load & render ──────────────────────────────────────
 async function loadFolder() {
   treeScroll.innerHTML = '<div class="loading">Scanning directory...</div>';
-  fileMap = {}; selected.clear(); outputText = '';
+  fileMap = {}; selected.clear();
   treeData = await buildTree(rootHandle, rootHandle.name);
   allPaths = collectFiles(treeData).filter(p => !BINARY_EXT.has(getExt(p.split('/').pop())));
   treeScroll.innerHTML = '';
   treeScroll.appendChild(renderNode(treeData, 0));
-  resetOutput();
   updateStatus();
 }
 
@@ -404,23 +436,76 @@ function getLang(filename) {
   return EXT_LANG[getExt(filename)] ?? '';
 }
 
-async function generateOutput() {
-  const paths = [...selected].filter(p => !BINARY_EXT.has(getExt(p.split('/').pop()))).sort();
-  if (!paths.length) return '';
-  const parts = [];
-  for (const path of paths) {
-    const h = fileMap[path];
-    if (!h) continue;
-    try {
-      const file = await h.getFile();
-      const content = await file.text();
-      const lang = getLang(h.name);
-      parts.push('`' + path + '`\n```' + lang + '\n' + content + '\n```');
-    } catch(err) {
-      parts.push('`' + path + '`\n[Error reading file: ' + err.message + ']');
-    }
+function getRepoRelativePath(path) {
+  const rootPath = treeData ? treeData.path : (rootHandle ? rootHandle.name : '');
+  const prefix = rootPath + '/';
+  return path.startsWith(prefix) ? path.slice(prefix.length) : path;
+}
+
+function generateBoundary() {
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function filterTreeForSelected(node, selectedPaths) {
+  if (node.type === 'file') return selectedPaths.has(node.path) ? node : null;
+  const children = node.children.map(c => filterTreeForSelected(c, selectedPaths)).filter(Boolean);
+  if (node !== treeData && !children.length) return null;
+  return { ...node, children };
+}
+
+function buildAsciiTree(node) {
+  const lines = [node.name + '/'];
+  function walk(children, prefix) {
+    children.forEach((child, index) => {
+      const last = index === children.length - 1;
+      lines.push(prefix + (last ? '└── ' : '├── ') + child.name + (child.type === 'dir' ? '/' : ''));
+      if (child.type === 'dir') walk(child.children, prefix + (last ? '    ' : '│   '));
+    });
   }
-  return parts.join('\n\n---\n\n');
+  walk(node.children, '');
+  return lines.join('\n');
+}
+
+function serializeFileBlock(boundary, path, content) {
+  const bytes = new TextEncoder().encode(content).length;
+  return '<<<' + boundary + ':FILE>>>\n' +
+    'PATH: ' + path + '\n' +
+    'UTF8-BYTES: ' + bytes + '\n' +
+    'CONTENT:\n' + content + '\n' +
+    '<<<' + boundary + ':END>>>';
+}
+
+async function generateOutput() {
+  const paths = [...selected]
+    .filter(p => !BINARY_EXT.has(getExt(p.split('/').pop())) && fileMap[p])
+    .sort();
+  if (!paths.length) return '';
+
+  const boundary = generateBoundary();
+  const mode = treeMode;
+  const repoName = rootHandle.name;
+  const selectedPaths = new Set(paths);
+  const treeRoot = mode === 'full' ? treeData : filterTreeForSelected(treeData, selectedPaths);
+  const treeText = buildAsciiTree(treeRoot);
+  const handles = paths.map(path => ({ path, exportPath:getRepoRelativePath(path), handle:fileMap[path] }));
+  const blocks = [];
+
+  for (const { exportPath, handle } of handles) {
+    const file = await handle.getFile();
+    const content = await file.text();
+    blocks.push(serializeFileBlock(boundary, exportPath, content));
+  }
+
+  return 'REPOSITORY: ' + repoName + '\n' +
+    'TREE: ' + mode + '\n' +
+    'BOUNDARY: ' + boundary + '\n\n' +
+    'This is a repository dump. Paths are relative to the repository root.\n' +
+    'The tree describes the repository structure. Only FILE blocks contain included file contents.\n' +
+    'If you need to run or modify the project, reconstruct the FILE blocks at their declared paths exactly.\n\n' +
+    '[TREE]\n' + treeText + '\n\n' +
+    '[FILES]\n\n' + blocks.join('\n\n') + '\n';
 }
 
 // ── Status & UI ────────────────────────────────────────
@@ -433,14 +518,55 @@ function updateStatus() {
   stChars.innerHTML  = '<span class="hi">' + chars.toLocaleString() + '</span> chars';
   stTok.innerHTML    = 'approx <span class="hi">' + tok.toLocaleString() + '</span> tokens';
   outMeta.innerHTML  = '<span class="hi">' + sel + '</span> file' + (sel!==1?'s':'') + ' selected';
-  btnGen.disabled    = sel === 0;
+  btnGen.disabled    = isGenerating || sel === 0;
+  refreshOutputStateUi();
+}
+
+function refreshOutputStateUi() {
+  outputStateEl.className = 'output-state';
+  if (outputStatus === 'current') {
+    outputStateEl.textContent = 'Current';
+    outputStateEl.classList.add('current');
+  } else if (outputStatus === 'outdated') {
+    outputStateEl.textContent = 'Outdated';
+    outputStateEl.classList.add('outdated');
+  } else {
+    outputStateEl.textContent = '';
+  }
+  const canExport = outputStatus === 'current' && !!outputText;
+  btnCopy.disabled = !canExport;
+  btnDownload.disabled = !canExport;
+}
+
+function markOutputStale() {
+  generationVersion++;
+  if (outputText) outputStatus = 'outdated';
+  refreshOutputStateUi();
+}
+
+function setOutputCurrent() {
+  outputStatus = outputText ? 'current' : 'not-generated';
+  refreshOutputStateUi();
 }
 
 function resetOutput() {
   outputText = '';
+  outputStatus = 'not-generated';
   outInner.innerHTML = '<div class="empty"><div class="empty-g">&#11041;</div><div class="empty-t">Nothing generated yet</div><div class="empty-s">Select files from the tree<br>then click <kbd>Generate</kbd></div></div>';
-  btnCopy.disabled = true;
   updateStatus();
+}
+
+function downloadOutput() {
+  if (!outputText || outputStatus !== 'current' || !rootHandle) return;
+  const blob = new Blob([outputText], { type:'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = rootHandle.name + '-dump.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ── Events ─────────────────────────────────────────────
@@ -448,17 +574,22 @@ const treeScroll = document.getElementById('treeScroll');
 const outInner   = document.getElementById('outInner');
 const hdrPath    = document.getElementById('hdrPath');
 const outMeta    = document.getElementById('outMeta');
+const outputStateEl = document.getElementById('outputState');
 const flash      = document.getElementById('flash');
 const btnOpen    = document.getElementById('btnOpen');
 const btnRefresh = document.getElementById('btnRefresh');
 const btnGen     = document.getElementById('btnGen');
 const btnCopy    = document.getElementById('btnCopy');
+const btnDownload = document.getElementById('btnDownload');
 const btnSelAll  = document.getElementById('btnSelAll');
 const btnClear   = document.getElementById('btnClear');
 const stFiles    = document.getElementById('stFiles');
 const stSel      = document.getElementById('stSel');
 const stChars    = document.getElementById('stChars');
 const stTok      = document.getElementById('stTok');
+const paneDivider = document.getElementById('paneDivider');
+const mainPane    = document.querySelector('.main');
+const treeModeButtons = [...document.querySelectorAll('[data-tree-mode]')];
 
 if (!('showDirectoryPicker' in window)) {
   document.getElementById('warnBar').style.display = 'block';
@@ -466,12 +597,14 @@ if (!('showDirectoryPicker' in window)) {
 
 btnOpen.addEventListener('click', async () => {
   try {
-    rootHandle = await window.showDirectoryPicker({
+    const nextRootHandle = await window.showDirectoryPicker({
       mode: 'read',
       id: 'contextdump-open-folder',
       startIn: rootHandle || 'desktop'
     });
 
+    markOutputStale();
+    rootHandle = nextRootHandle;
     hdrPath.textContent = rootHandle.name;
     hdrPath.classList.add('live');
     btnRefresh.disabled = false;
@@ -484,6 +617,7 @@ btnOpen.addEventListener('click', async () => {
 btnRefresh.addEventListener('click', async () => {
   if (!rootHandle) return;
   const prev = [...selected];
+  markOutputStale();
   btnRefresh.disabled = true;
   btnRefresh.textContent = 'Refreshing...';
   await loadFolder();
@@ -495,23 +629,36 @@ btnRefresh.addEventListener('click', async () => {
 });
 
 btnGen.addEventListener('click', async () => {
-  if (!selected.size) return;
-  btnGen.disabled = true;
+  if (!selected.size || isGenerating) return;
+  const versionAtStart = generationVersion;
+  isGenerating = true;
   btnGen.textContent = 'Reading...';
-  outputText = await generateOutput();
-  outInner.innerHTML = '';
-  const pre = document.createElement('pre');
-  pre.className = 'out-pre';
-  pre.textContent = outputText;
-  outInner.appendChild(pre);
-  btnCopy.disabled = false;
-  btnGen.disabled = false;
-  btnGen.textContent = 'Generate';
   updateStatus();
+  try {
+    const generated = await generateOutput();
+    if (!generated) return;
+    outputText = generated;
+    outInner.innerHTML = '';
+    const pre = document.createElement('pre');
+    pre.className = 'out-pre';
+    pre.textContent = outputText;
+    outInner.appendChild(pre);
+    if (generationVersion === versionAtStart) setOutputCurrent();
+    else {
+      outputStatus = 'outdated';
+      refreshOutputStateUi();
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    isGenerating = false;
+    btnGen.textContent = 'Generate';
+    updateStatus();
+  }
 });
 
 btnCopy.addEventListener('click', async () => {
-  if (!outputText) return;
+  if (!outputText || outputStatus !== 'current') return;
   try {
     await navigator.clipboard.writeText(outputText);
     flash.style.opacity = '1';
@@ -527,13 +674,19 @@ btnCopy.addEventListener('click', async () => {
   }
 });
 
+
+btnDownload.addEventListener('click', downloadOutput);
+
 btnSelAll.addEventListener('click', () => {
   allPaths.forEach(p => selected.add(p));
+  markOutputStale();
   refreshAllCbs(); updateStatus();
 });
 
 btnClear.addEventListener('click', () => {
-  selected.clear(); refreshAllCbs(); resetOutput();
+  selected.clear();
+  markOutputStale();
+  refreshAllCbs(); updateStatus();
 });
 
 document.querySelectorAll('.chip').forEach(chip => {
@@ -541,9 +694,52 @@ document.querySelectorAll('.chip').forEach(chip => {
     const key = chip.dataset.f;
     filters[key] = !filters[key];
     chip.classList.toggle('on', filters[key]);
-    if (rootHandle) await loadFolder();
+    if (rootHandle) {
+      markOutputStale();
+      await loadFolder();
+    }
   });
 });
+
+
+treeModeButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const nextMode = btn.dataset.treeMode;
+    if (nextMode === treeMode) return;
+    treeMode = nextMode;
+    treeModeButtons.forEach(b => {
+      const active = b.dataset.treeMode === treeMode;
+      b.classList.toggle('on', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    markOutputStale();
+  });
+});
+
+paneDivider.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  paneDivider.setPointerCapture(e.pointerId);
+  paneDivider.classList.add('dragging');
+  document.body.classList.add('resizing');
+});
+
+paneDivider.addEventListener('pointermove', e => {
+  if (!paneDivider.hasPointerCapture(e.pointerId)) return;
+  const rect = mainPane.getBoundingClientRect();
+  const min = 240;
+  const max = Math.max(min, rect.width * 0.45);
+  const width = Math.min(max, Math.max(min, e.clientX - rect.left));
+  document.documentElement.style.setProperty('--tree-width', width + 'px');
+});
+
+function stopDividerDrag(e) {
+  if (paneDivider.hasPointerCapture(e.pointerId)) paneDivider.releasePointerCapture(e.pointerId);
+  paneDivider.classList.remove('dragging');
+  document.body.classList.remove('resizing');
+}
+
+paneDivider.addEventListener('pointerup', stopDividerDrag);
+paneDivider.addEventListener('pointercancel', stopDividerDrag);
 
 updateStatus();
 </script>
