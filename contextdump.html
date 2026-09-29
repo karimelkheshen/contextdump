@@ -7,49 +7,46 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f6f4;--surface:#ffffff;--surface2:#fbfbfa;
-  --border:#e7e6e3;--border2:#d7d5d1;
-  --accent:#6f5bd3;--accent-h:#5f4bc2;
-  --accent-dim:rgba(111,91,211,.08);--accent-bright:rgba(111,91,211,.14);
-  --text:#202022;--text-dim:#626166;--text-muted:#8b898f;--text-ghost:#b9b7bc;
-  --success:#27864a;--danger:#b83b42;--mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+  --bg:#f4f4f2;--surface:#ffffff;--surface2:#fafaf8;
+  --border:#e6e5e1;--border2:#d4d2cd;
+  --accent:#6554d9;--accent-h:#5544c7;
+  --accent-dim:rgba(101,84,217,.08);--accent-bright:rgba(101,84,217,.14);
+  --text:#1e1e21;--text-dim:#5d5c62;--text-muted:#8a888f;--text-ghost:#b8b6bc;
+  --success:#27864a;--danger:#b83b42;--shadow:0 18px 60px rgba(32,32,36,.16);
+  --mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
   --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
-  --tree-width:295px;
+  --tree-width:300px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
 body{display:flex;flex-direction:column}
 body.resizing{cursor:col-resize;user-select:none}
-.hdr{height:52px;padding:0 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.025em;white-space:nowrap}
+.hdr{height:58px;padding:0 14px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;backdrop-filter:blur(14px)}
+.brand{width:132px;display:flex;flex-direction:column;gap:2px;flex-shrink:0}
+.logo{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.025em;white-space:nowrap;line-height:1.05}
 .logo span{color:var(--text-muted);font-weight:500}
-.hdr-path{flex:1;font-family:var(--mono);font-size:11px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.version{font-family:var(--mono);font-size:8.5px;color:var(--text-ghost);letter-spacing:.03em;line-height:1}
+.hdr-path{flex:1;font-family:var(--mono);font-size:10.5px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:2px}
 .hdr-path.live{color:var(--text-dim)}
-.btn{height:30px;padding:0 12px;font-family:var(--sans);font-size:11px;font-weight:600;border:1px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s,background .12s,box-shadow .12s}
-.btn:hover:not(:disabled){border-color:#b9b3d8;color:var(--accent);background:#fdfcff}
-.btn:focus-visible,.chip:focus-visible,.gbtn:focus-visible,.seg:focus-visible,.t-cb:focus-visible{outline:2px solid rgba(111,91,211,.28);outline-offset:2px}
+.btn{height:30px;padding:0 11px;font-family:var(--sans);font-size:10.5px;font-weight:650;border:1px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s,background .12s,box-shadow .12s}
+.btn:hover:not(:disabled){border-color:#bcb7dc;color:var(--accent);background:#fdfcff}
+.btn:focus-visible,.gbtn:focus-visible,.seg:focus-visible,.t-cb:focus-visible,.modal-close:focus-visible,.rule-input:focus-visible{outline:2px solid rgba(101,84,217,.26);outline-offset:2px}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#ffffff;box-shadow:0 1px 2px rgba(32,32,34,.08)}
 .btn.primary:hover:not(:disabled){background:var(--accent-h);border-color:var(--accent-h);color:#fff}
 .btn:disabled{opacity:.38;cursor:default}
-.filters{height:38px;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;overflow-x:auto}
-.filters::-webkit-scrollbar{display:none}
-.flbl{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;margin-right:4px}
-.chip{height:24px;padding:0 9px;font-family:var(--mono);font-size:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text-dim);cursor:pointer;border-radius:6px;white-space:nowrap;transition:border-color .12s,color .12s,background .12s;user-select:none}
-.chip:hover{border-color:#c7c3d6}
-.chip.on{border-color:#c9c1f0;color:var(--accent);background:var(--accent-dim)}
-.main{flex:1;display:grid;grid-template-columns:var(--tree-width) 6px minmax(0,1fr);overflow:hidden;min-height:0}
+.main{flex:1;display:grid;grid-template-columns:var(--tree-width) 5px minmax(0,1fr);overflow:hidden;min-height:0}
 .tree-panel{display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
 .pane-divider{position:relative;background:var(--border);cursor:col-resize;touch-action:none}
 .pane-divider::after{content:'';position:absolute;inset:0 -3px;z-index:2}
 .pane-divider:hover,.pane-divider.dragging{background:#c9c1ef}
 .panel-hdr{height:36px;padding:0 11px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.panel-lbl{font-size:10px;font-weight:650;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
-.panel-btns{display:flex;gap:12px}
-.gbtn{font-family:var(--sans);font-size:10px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:3px 0;transition:color .12s}
+.panel-lbl{font-size:9.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.09em}
+.panel-btns{display:flex;gap:11px}
+.gbtn{font-family:var(--sans);font-size:9.5px;font-weight:650;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:3px 0;transition:color .12s}
 .gbtn:hover{color:var(--accent)}
 .tree-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 0;background:var(--surface)}
-.tree-scroll::-webkit-scrollbar,.out-scroll::-webkit-scrollbar{width:7px}
-.tree-scroll::-webkit-scrollbar-thumb,.out-scroll::-webkit-scrollbar-thumb{background:#d9d7d3;border:2px solid transparent;background-clip:padding-box;border-radius:7px}
+.tree-scroll::-webkit-scrollbar,.out-scroll::-webkit-scrollbar,.scan-list::-webkit-scrollbar{width:7px}
+.tree-scroll::-webkit-scrollbar-thumb,.out-scroll::-webkit-scrollbar-thumb,.scan-list::-webkit-scrollbar-thumb{background:#d9d7d3;border:2px solid transparent;background-clip:padding-box;border-radius:7px}
 .t-row{display:flex;align-items:center;gap:5px;padding:2px 9px;cursor:pointer;min-height:24px;transition:background .08s}
 .t-row:hover{background:#f7f6f9}
 .t-indent{display:inline-block;flex-shrink:0}
@@ -61,63 +58,82 @@ body.resizing{cursor:col-resize;user-select:none}
 .t-cb:indeterminate{border-color:var(--accent);background:var(--accent-bright)}
 .t-cb:indeterminate::after{content:'';position:absolute;left:3px;top:5px;width:5px;height:1.5px;background:var(--accent)}
 .t-cb:disabled{cursor:default;background:#f4f3f1}
-.t-icon{font-family:var(--mono);font-size:10px;width:17px;text-align:center;flex-shrink:0;line-height:1}
-.t-name{font-family:var(--mono);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.t-icon{font-family:var(--mono);font-size:10px;width:17px;text-align:center;flex-shrink:0;line-height:1;color:var(--text-muted)}
+.t-name{font-family:var(--mono);font-size:11.25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
 .t-name.dir{color:#4e4c53;font-weight:500}
 .t-name.file{color:var(--text)}
 .t-name.binary{color:var(--text-ghost)}
 .t-children{display:none}
 .t-children.open{display:block}
 .out-panel{display:flex;flex-direction:column;overflow:hidden;background:var(--surface2);min-width:0}
-.out-bar{min-height:44px;padding:6px 10px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.tree-option{display:flex;align-items:center;gap:7px;margin-right:3px;white-space:nowrap}
-.opt-label{font-size:10px;font-weight:600;color:var(--text-muted)}
-.segmented{display:inline-flex;padding:2px;background:#f2f1f3;border:1px solid var(--border);border-radius:7px}
-.seg{height:23px;padding:0 8px;border:0;border-radius:5px;background:transparent;font-family:var(--sans);font-size:10px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
+.out-bar{min-height:42px;padding:6px 10px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tree-option{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.opt-label{font-size:9.5px;font-weight:650;color:var(--text-muted)}
+.segmented{display:inline-flex;padding:2px;background:#f1f0f2;border:1px solid var(--border);border-radius:7px}
+.seg{height:22px;padding:0 8px;border:0;border-radius:5px;background:transparent;font-family:var(--sans);font-size:9.5px;font-weight:650;color:var(--text-muted);cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
 .seg:hover{color:var(--text-dim)}
 .seg.on{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(32,32,34,.08)}
-.out-meta{flex:1;min-width:90px;font-size:10.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.out-meta{flex:1;min-width:80px;font-size:10px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .out-meta .hi,.statusbar .hi{font-family:var(--mono);color:var(--text-dim);font-weight:500}
-.output-state{display:none;padding:3px 7px;border:1px solid var(--border2);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.03em;color:var(--text-muted);background:var(--surface2)}
+.output-state{display:none;padding:3px 7px;border:1px solid var(--border2);border-radius:999px;font-size:8.5px;font-weight:700;letter-spacing:.03em;color:var(--text-muted);background:var(--surface2)}
 .output-state.current,.output-state.outdated{display:inline-flex}
 .output-state.current{color:var(--text-dim)}
 .output-state.outdated{color:var(--accent);background:var(--accent-dim);border-color:#d8d1f5}
-.flash{font-size:10px;font-weight:650;color:var(--success);opacity:0;transition:opacity .1s;white-space:nowrap}
+.flash{font-size:9.5px;font-weight:650;color:var(--success);opacity:0;transition:opacity .1s;white-space:nowrap}
 .out-scroll{flex:1;overflow-y:auto;background:var(--surface2)}
 .out-inner{padding:18px 20px;min-height:100%}
 .out-pre{font-family:var(--mono);font-size:11px;line-height:1.65;white-space:pre-wrap;word-break:break-word;color:var(--text)}
-.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:var(--text-ghost);padding:40px;text-align:center}
-.empty-g{font-family:var(--mono);font-size:25px;line-height:1;color:#c8c5cc}
-.empty-t{font-size:12px;font-weight:650;color:var(--text-dim);letter-spacing:-.01em}
-.empty-s{font-size:11px;color:var(--text-muted);line-height:1.65}
-kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px solid var(--border2);font-family:var(--mono);font-size:10px;border-radius:4px;color:var(--text-dim);box-shadow:0 1px 0 rgba(0,0,0,.03)}
-.statusbar{height:26px;padding:0 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:9.5px;color:var(--text-muted);flex-shrink:0}
-.sep{color:#d0ced3}
+.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text-ghost);padding:40px;text-align:center}
+.empty-g{font-family:var(--mono);font-size:23px;line-height:1;color:#c8c5cc}
+.empty-t{font-size:11.5px;font-weight:650;color:var(--text-dim);letter-spacing:-.01em}
+.empty-s{font-size:10.5px;color:var(--text-muted);line-height:1.55}
+kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px solid var(--border2);font-family:var(--mono);font-size:9.5px;border-radius:4px;color:var(--text-dim);box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.statusbar{height:25px;padding:0 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;font-family:var(--mono);font-size:9px;color:var(--text-muted);flex-shrink:0}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.42}}
-.loading{padding:16px 12px;font-family:var(--mono);font-size:11px;color:var(--text-dim);animation:blink 1.2s ease-in-out infinite}
-.warn-bar{display:none;background:#fff4f4;border-bottom:1px solid #efc7ca;padding:8px 16px;font-size:11px;color:var(--danger);text-align:center;flex-shrink:0}
+.loading{padding:16px 12px;font-family:var(--mono);font-size:10.5px;color:var(--text-dim);animation:blink 1.2s ease-in-out infinite}
+.warn-bar{display:none;background:#fff4f4;border-bottom:1px solid #efc7ca;padding:8px 16px;font-size:10.5px;color:var(--danger);text-align:center;flex-shrink:0}
+.modal-backdrop{position:fixed;inset:0;z-index:30;background:rgba(28,27,32,.28);display:none;align-items:center;justify-content:center;padding:22px;backdrop-filter:blur(3px)}
+.modal-backdrop.open{display:flex}
+.modal-card{width:min(620px,100%);max-height:min(680px,calc(100vh - 44px));display:flex;flex-direction:column;background:var(--surface);border:1px solid rgba(205,202,213,.9);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.modal-card.compact{width:min(560px,100%)}
+.modal-hdr{min-height:58px;padding:13px 15px 11px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px}
+.modal-title-wrap{flex:1;min-width:0}
+.modal-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.015em}
+.modal-sub{margin-top:4px;font-size:10.5px;line-height:1.45;color:var(--text-muted)}
+.modal-close{width:28px;height:28px;border:0;border-radius:6px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:18px;line-height:1}
+.modal-close:hover{background:var(--surface2);color:var(--text)}
+.modal-body{padding:14px 15px;overflow:auto}
+.modal-actions{min-height:52px;padding:10px 15px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:flex-end;background:var(--surface2)}
+.modal-actions .spacer{flex:1}
+.rule-input{display:block;width:100%;height:320px;resize:vertical;min-height:180px;max-height:460px;border:1px solid var(--border2);border-radius:8px;padding:11px 12px;background:#fcfcfb;color:var(--text);font:10.5px/1.55 var(--mono);outline:none}
+.rule-input:focus{border-color:#bdb6e4;box-shadow:0 0 0 3px rgba(101,84,217,.08)}
+.rule-help{margin-top:8px;font-size:9.5px;line-height:1.45;color:var(--text-muted)}
+.scan-toolbar{height:34px;padding:0 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;background:var(--surface2)}
+.scan-count{font:9.5px var(--mono);color:var(--text-muted);margin-right:auto}
+.scan-list{overflow:auto;max-height:420px;padding:5px 0}
+.scan-row{display:flex;align-items:center;gap:7px;min-height:31px;padding:4px 13px}
+.scan-row:hover{background:#f8f7fa}
+.scan-row .t-cb{width:14px;height:14px}
+.scan-row .scan-kind{width:20px;text-align:center;font:9px var(--mono);font-weight:700;color:var(--text-muted)}
+.scan-row .scan-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:11px var(--mono);color:var(--text)}
+.scan-note{padding:9px 13px;border-top:1px solid var(--border);font-size:9.5px;line-height:1.45;color:var(--text-muted);background:var(--surface2)}
 </style>
 </head>
 <body>
 
 <div class="warn-bar" id="warnBar">
-  Your browser does not support the File System Access API. Please use Chrome, Edge, or Arc 86+.
+  This browser does not support the File System Access API. Use a Chromium-based browser.
 </div>
 
 <div class="hdr">
-  <div class="logo">context<span>dump</span></div>
+  <div class="brand">
+    <div class="logo">context<span>dump</span></div>
+    <div class="version" id="appVersion">v2.1.0</div>
+  </div>
   <div class="hdr-path" id="hdrPath">No folder open</div>
-  <button class="btn" id="btnOpen">Open Folder</button>
-  <button class="btn" id="btnRefresh" disabled>&#x21BA; Refresh</button>
-</div>
-
-<div class="filters">
-  <span class="flbl">Exclude:</span>
-  <button class="chip on" data-f="nodeModules">node_modules</button>
-  <button class="chip on" data-f="git">.git</button>
-  <button class="chip on" data-f="pycache">__pycache__ / .pyc</button>
-  <button class="chip on" data-f="buildDist">build / dist / out</button>
-  <button class="chip on" data-f="dotFiles">hidden / dot files</button>
+  <button class="btn" id="btnIgnore">Ignore rules</button>
+  <button class="btn" id="btnRefresh" disabled>Refresh</button>
+  <button class="btn primary" id="btnOpen">Open folder</button>
 </div>
 
 <div class="main">
@@ -125,15 +141,15 @@ kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px so
     <div class="panel-hdr">
       <span class="panel-lbl">Files</span>
       <div class="panel-btns">
-        <button class="gbtn" id="btnSelAll">Select All</button>
-        <button class="gbtn" id="btnClear">Clear</button>
+        <button class="gbtn" id="btnSelAll">All</button>
+        <button class="gbtn" id="btnClear">None</button>
       </div>
     </div>
     <div class="tree-scroll" id="treeScroll">
       <div class="empty">
         <div class="empty-g">&#9647;</div>
         <div class="empty-t">No folder open</div>
-        <div class="empty-s">Click <kbd>Open Folder</kbd><br>to browse your project</div>
+        <div class="empty-s">Open a project to begin.</div>
       </div>
     </div>
   </div>
@@ -143,15 +159,15 @@ kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px so
   <div class="out-panel">
     <div class="out-bar">
       <div class="tree-option">
-        <span class="opt-label">Repository tree</span>
+        <span class="opt-label">Tree</span>
         <div class="segmented" role="group" aria-label="Repository tree in generated dump">
-          <button class="seg on" data-tree-mode="selected" aria-pressed="true">Selected only</button>
-          <button class="seg" data-tree-mode="full" aria-pressed="false">Full project</button>
+          <button class="seg on" data-tree-mode="selected" aria-pressed="true">Selected</button>
+          <button class="seg" data-tree-mode="full" aria-pressed="false">Full</button>
         </div>
       </div>
-      <div class="out-meta" id="outMeta"><span class="hi">0</span> files selected</div>
+      <div class="out-meta" id="outMeta"><span class="hi">0</span> selected</div>
       <span class="output-state" id="outputState"></span>
-      <div class="flash" id="flash">&#10003; Copied!</div>
+      <div class="flash" id="flash">Copied</div>
       <button class="btn" id="btnGen" disabled>Generate</button>
       <button class="btn primary" id="btnCopy" disabled>Copy</button>
       <button class="btn" id="btnDownload" disabled>Download</button>
@@ -160,8 +176,8 @@ kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px so
       <div class="out-inner" id="outInner">
         <div class="empty">
           <div class="empty-g">&#11041;</div>
-          <div class="empty-t">Nothing generated yet</div>
-          <div class="empty-s">Select files from the tree<br>then click <kbd>Generate</kbd></div>
+          <div class="empty-t">No dump yet</div>
+          <div class="empty-s">Select files, then generate.</div>
         </div>
       </div>
     </div>
@@ -169,13 +185,53 @@ kbd{display:inline-block;padding:1px 5px;background:var(--surface);border:1px so
 </div>
 
 <div class="statusbar">
-  <span id="stFiles"><span class="hi">0</span> files</span>
-  <span class="sep">/</span>
-  <span id="stSel"><span class="hi">0</span> selected</span>
-  <span class="sep">/</span>
-  <span id="stChars"><span class="hi">0</span> chars</span>
-  <span class="sep">/</span>
-  <span id="stTok">approx <span class="hi">0</span> tokens</span>
+  <span id="stSummary"><span class="hi">0</span> files · <span class="hi">0</span> selected · <span class="hi">0</span> chars · ~<span class="hi">0</span> tokens</span>
+</div>
+
+<div class="modal-backdrop" id="ignoreModal" aria-hidden="true">
+  <div class="modal-card compact" role="dialog" aria-modal="true" aria-labelledby="ignoreTitle">
+    <div class="modal-hdr">
+      <div class="modal-title-wrap">
+        <div class="modal-title" id="ignoreTitle">Ignore rules</div>
+        <div class="modal-sub">Gitignore-style patterns used before recursive scanning.</div>
+      </div>
+      <button class="modal-close" id="btnIgnoreClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <textarea class="rule-input" id="ignoreInput" spellcheck="false" aria-label="Ignore patterns"></textarea>
+      <div class="rule-help">One pattern per line. Supports comments, <code>*</code>, <code>**</code>, <code>?</code>, root-relative <code>/path</code>, directory suffix <code>/</code>, and <code>!</code> negation.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="gbtn" id="btnIgnoreDefaults">Restore defaults</button>
+      <div class="spacer"></div>
+      <button class="btn" id="btnIgnoreCancel">Cancel</button>
+      <button class="btn primary" id="btnIgnoreSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="scanModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="scanTitle">
+    <div class="modal-hdr">
+      <div class="modal-title-wrap">
+        <div class="modal-title" id="scanTitle">Choose what to scan</div>
+        <div class="modal-sub" id="scanSub">Review the project root before recursive scanning starts.</div>
+      </div>
+      <button class="modal-close" id="btnScanClose" aria-label="Cancel">&times;</button>
+    </div>
+    <div class="scan-toolbar">
+      <span class="scan-count" id="scanCount">0 items</span>
+      <button class="gbtn" id="btnScanAll">All</button>
+      <button class="gbtn" id="btnScanNone">None</button>
+    </div>
+    <div class="scan-list" id="scanList"></div>
+    <div class="scan-note">Unchecked items are added to Ignore rules before the scan. Existing ignore rules still apply inside checked items.</div>
+    <div class="modal-actions">
+      <div class="spacer"></div>
+      <button class="btn" id="btnScanCancel">Cancel</button>
+      <button class="btn primary" id="btnScanStart">Scan project</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -190,8 +246,44 @@ let outputStatus = 'not-generated';
 let treeMode = 'selected';
 let generationVersion = 0;
 let isGenerating = false;
+let scanResolver = null;
 
-const filters = { nodeModules:true, git:true, pycache:true, buildDist:true, dotFiles:true };
+const APP_VERSION_FALLBACK = '2.1.0';
+const IGNORE_STORAGE_KEY = 'contextdump.ignoreRules.v1';
+const DEFAULT_IGNORE_RULES = `# Dependencies
+node_modules/
+
+# Version control
+.git/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Build output
+build/
+dist/
+out/
+.next/
+.nuxt/
+target/
+.output/
+__sapper__/
+.vercel/
+.cache/
+coverage/
+.turbo/
+storybook-static/
+
+# Hidden files
+.*
+!.env
+!.env.example
+!.env.local`;
+
+let ignoreText = loadStoredIgnoreText();
+let ignoreRules = compileIgnoreRules(ignoreText);
 
 const BINARY_EXT = new Set([
   'png','jpg','jpeg','gif','webp','ico','bmp','tiff','svg',
@@ -226,46 +318,174 @@ const ICONS = {
   env:'EV', dockerfile:'Dk', lock:'LK', csv:'CV',
 };
 
-const BUILD_DIRS = new Set([
-  'build','dist','out','.next','.nuxt','target','.output',
-  '__sapper__','.vercel','.cache','coverage','.turbo','storybook-static','__pycache__'
-]);
+// ── Version ────────────────────────────────────────────
+async function loadAppVersion() {
+  appVersion.textContent = 'v' + APP_VERSION_FALLBACK;
+  try {
+    const response = await fetch('./VERSION', { cache:'no-store' });
+    if (!response.ok) return;
+    const version = (await response.text()).trim();
+    if (version) appVersion.textContent = 'v' + version;
+  } catch (_) {
+    // Direct file:// launches can block fetch. Keep the release fallback visible.
+  }
+}
 
-// ── Filter ─────────────────────────────────────────────
-function shouldExclude(name) {
-  const low = name.toLowerCase();
-  if (filters.nodeModules && name === 'node_modules') return true;
-  if (filters.git && name === '.git') return true;
-  if (filters.pycache && (name === '__pycache__' || low.endsWith('.pyc') || low.endsWith('.pyo'))) return true;
-  if (filters.buildDist && BUILD_DIRS.has(low)) return true;
-  if (filters.dotFiles && name.startsWith('.') && name !== '.env' && name !== '.env.example' && name !== '.env.local') return true;
-  return false;
+// ── Ignore rules ───────────────────────────────────────
+function loadStoredIgnoreText() {
+  try {
+    const saved = localStorage.getItem(IGNORE_STORAGE_KEY);
+    return saved === null ? DEFAULT_IGNORE_RULES : saved;
+  } catch (_) {
+    return DEFAULT_IGNORE_RULES;
+  }
+}
+
+function setIgnoreText(nextText) {
+  ignoreText = nextText.replace(/\r\n/g, '\n').trim();
+  ignoreRules = compileIgnoreRules(ignoreText);
+  try { localStorage.setItem(IGNORE_STORAGE_KEY, ignoreText); } catch (_) {}
+}
+
+function regexEscape(ch) {
+  return /[\\^$.*+?()[\]{}|]/.test(ch) ? '\\' + ch : ch;
+}
+
+function globToRegexSource(pattern) {
+  let out = '';
+  for (let i = 0; i < pattern.length; i++) {
+    const ch = pattern[i];
+    if (ch === '\\' && i + 1 < pattern.length) {
+      out += regexEscape(pattern[++i]);
+      continue;
+    }
+    if (ch === '*') {
+      if (pattern[i + 1] === '*') {
+        i++;
+        if (pattern[i + 1] === '/') {
+          i++;
+          out += '(?:.*/)?';
+        } else {
+          out += '.*';
+        }
+      } else {
+        out += '[^/]*';
+      }
+      continue;
+    }
+    if (ch === '?') {
+      out += '[^/]';
+      continue;
+    }
+    out += regexEscape(ch);
+  }
+  return out;
+}
+
+function compileIgnoreRules(text) {
+  const rules = [];
+  for (const rawLine of text.split('\n')) {
+    let line = rawLine.trim();
+    if (!line) continue;
+
+    if (line.startsWith('\\#')) line = line.slice(1);
+    else if (line.startsWith('#')) continue;
+
+    let negated = false;
+    if (line.startsWith('\\!')) line = line.slice(1);
+    else if (line.startsWith('!')) {
+      negated = true;
+      line = line.slice(1);
+    }
+    if (!line) continue;
+
+    const directoryOnly = line.endsWith('/');
+    if (directoryOnly) line = line.slice(0, -1);
+
+    const anchored = line.startsWith('/');
+    if (anchored) line = line.slice(1);
+    if (!line) continue;
+
+    const hasSlash = line.includes('/');
+    const source = globToRegexSource(line);
+    const regex = (anchored || hasSlash)
+      ? new RegExp('^' + source + '$')
+      : new RegExp('(?:^|/)' + source + '$');
+
+    rules.push({ negated, directoryOnly, regex });
+  }
+  return rules;
+}
+
+function shouldIgnorePath(relPath, isDir) {
+  const path = relPath.replace(/^\/+|\/+$/g, '');
+  let ignored = false;
+  for (const rule of ignoreRules) {
+    if (rule.directoryOnly && !isDir) continue;
+    if (rule.regex.test(path)) ignored = !rule.negated;
+  }
+  return ignored;
+}
+
+function escapeIgnoreLiteral(name) {
+  return name.replace(/[\\*?!#\[\]]/g, '\\$&');
+}
+
+function addInitialScanIgnores(entries) {
+  const patterns = entries.map(entry => '/' + escapeIgnoreLiteral(entry.name) + (entry.kind === 'directory' ? '/' : ''));
+  if (!patterns.length) return;
+
+  const existing = new Set(ignoreText.split('\n').map(line => line.trim()).filter(Boolean));
+  const fresh = patterns.filter(pattern => !existing.has(pattern));
+  if (!fresh.length) return;
+
+  const base = ignoreText.trimEnd();
+  const next = (base ? base + '\n\n' : '') + '# Added from initial scan\n' + fresh.join('\n');
+  setIgnoreText(next);
 }
 
 // ── Directory traversal ────────────────────────────────
-async function buildTree(dirHandle, relPath) {
+async function listTopLevel(dirHandle) {
+  const entries = [];
+  for await (const [name, handle] of dirHandle.entries()) {
+    entries.push({ name, kind:handle.kind });
+  }
+  entries.sort((a,b) => {
+    const ad = a.kind === 'directory', bd = b.kind === 'directory';
+    if (ad !== bd) return ad ? -1 : 1;
+    return a.name.localeCompare(b.name, undefined, { sensitivity:'base' });
+  });
+  return entries;
+}
+
+async function buildTree(dirHandle, displayPath, repoRelPath='') {
   const node = {
     name: dirHandle.name, type: 'dir',
-    path: relPath, handle: dirHandle,
+    path: displayPath, handle: dirHandle,
     children: [], expanded: true
   };
+
   const entries = [];
-  for await (const [n, h] of dirHandle.entries()) entries.push({ name:n, handle:h });
+  for await (const [name, handle] of dirHandle.entries()) entries.push({ name, handle });
   entries.sort((a,b) => {
     const ad = a.handle.kind==='directory', bd = b.handle.kind==='directory';
     if (ad !== bd) return ad ? -1 : 1;
     return a.name.localeCompare(b.name, undefined, { sensitivity:'base' });
   });
+
   for (const { name, handle } of entries) {
-    if (shouldExclude(name)) continue;
-    const cp = relPath + '/' + name;
-    if (handle.kind === 'directory') {
-      const child = await buildTree(handle, cp);
+    const childRepoRel = repoRelPath ? repoRelPath + '/' + name : name;
+    const isDir = handle.kind === 'directory';
+    if (shouldIgnorePath(childRepoRel, isDir)) continue;
+
+    const childDisplayPath = displayPath + '/' + name;
+    if (isDir) {
+      const child = await buildTree(handle, childDisplayPath, childRepoRel);
       child.expanded = false;
       node.children.push(child);
     } else {
-      node.children.push({ name, type:'file', path:cp, handle });
-      fileMap[cp] = handle;
+      node.children.push({ name, type:'file', path:childDisplayPath, handle });
+      fileMap[childDisplayPath] = handle;
     }
   }
   return node;
@@ -292,7 +512,6 @@ function renderNode(node, depth) {
   row.dataset.path = node.path;
   row.dataset.kind = node.type;
 
-  // indent
   const ind = document.createElement('span');
   ind.className = 't-indent';
   ind.style.width = (depth * 14) + 'px';
@@ -310,7 +529,9 @@ function renderNode(node, depth) {
 
     const icon = document.createElement('span');
     icon.className = 't-icon';
-    icon.textContent = depth === 0 ? '\uD83D\uDDC2' : '\uD83D\uDCC1';
+    icon.textContent = depth === 0 ? 'ROOT' : 'DIR';
+    icon.style.width = depth === 0 ? '28px' : '17px';
+    icon.style.fontSize = depth === 0 ? '7px' : '8px';
     row.appendChild(icon);
 
     const nm = document.createElement('span');
@@ -362,7 +583,7 @@ function renderNode(node, depth) {
     const nm = document.createElement('span');
     nm.className = 't-name ' + (isBin ? 'binary' : 'file');
     nm.textContent = node.name;
-    if (isBin) nm.title = 'Binary file \u2013 skipped';
+    if (isBin) nm.title = 'Binary file — skipped';
     row.appendChild(nm);
     wrap.appendChild(row);
 
@@ -418,11 +639,13 @@ function refreshAllCbs() {
 }
 
 // ── Load & render ──────────────────────────────────────
-async function loadFolder() {
-  treeScroll.innerHTML = '<div class="loading">Scanning directory...</div>';
+async function loadFolder(preserveSelection=[]) {
+  treeScroll.innerHTML = '<div class="loading">Scanning project...</div>';
+  const keep = new Set(preserveSelection);
   fileMap = {}; selected.clear();
   treeData = await buildTree(rootHandle, rootHandle.name);
   allPaths = collectFiles(treeData).filter(p => !BINARY_EXT.has(getExt(p.split('/').pop())));
+  keep.forEach(p => { if (fileMap[p] && !BINARY_EXT.has(getExt(p.split('/').pop()))) selected.add(p); });
   treeScroll.innerHTML = '';
   treeScroll.appendChild(renderNode(treeData, 0));
   updateStatus();
@@ -513,11 +736,11 @@ function updateStatus() {
   const sel = [...selected].filter(p => !BINARY_EXT.has(getExt(p.split('/').pop()))).length;
   const chars = outputText.length;
   const tok = Math.round(chars / 4);
-  stFiles.innerHTML  = '<span class="hi">' + allPaths.length + '</span> files';
-  stSel.innerHTML    = '<span class="hi">' + sel + '</span> selected';
-  stChars.innerHTML  = '<span class="hi">' + chars.toLocaleString() + '</span> chars';
-  stTok.innerHTML    = 'approx <span class="hi">' + tok.toLocaleString() + '</span> tokens';
-  outMeta.innerHTML  = '<span class="hi">' + sel + '</span> file' + (sel!==1?'s':'') + ' selected';
+  stSummary.innerHTML = '<span class="hi">' + allPaths.length + '</span> files · ' +
+    '<span class="hi">' + sel + '</span> selected · ' +
+    '<span class="hi">' + chars.toLocaleString() + '</span> chars · ~' +
+    '<span class="hi">' + tok.toLocaleString() + '</span> tokens';
+  outMeta.innerHTML  = '<span class="hi">' + sel + '</span> selected';
   btnGen.disabled    = isGenerating || sel === 0;
   refreshOutputStateUi();
 }
@@ -552,7 +775,7 @@ function setOutputCurrent() {
 function resetOutput() {
   outputText = '';
   outputStatus = 'not-generated';
-  outInner.innerHTML = '<div class="empty"><div class="empty-g">&#11041;</div><div class="empty-t">Nothing generated yet</div><div class="empty-s">Select files from the tree<br>then click <kbd>Generate</kbd></div></div>';
+  outInner.innerHTML = '<div class="empty"><div class="empty-g">&#11041;</div><div class="empty-t">No dump yet</div><div class="empty-s">Select files, then generate.</div></div>';
   updateStatus();
 }
 
@@ -569,27 +792,107 @@ function downloadOutput() {
   URL.revokeObjectURL(url);
 }
 
+function setModalOpen(modal, open) {
+  modal.classList.toggle('open', open);
+  modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+}
+
+function openIgnoreRules() {
+  ignoreInput.value = ignoreText;
+  btnIgnoreSave.textContent = rootHandle ? 'Save & rescan' : 'Save';
+  setModalOpen(ignoreModal, true);
+  requestAnimationFrame(() => ignoreInput.focus());
+}
+
+async function saveIgnoreRules() {
+  setIgnoreText(ignoreInput.value);
+  setModalOpen(ignoreModal, false);
+  if (!rootHandle) return;
+  const previous = [...selected];
+  markOutputStale();
+  btnRefresh.disabled = true;
+  try {
+    await loadFolder(previous);
+  } finally {
+    btnRefresh.disabled = false;
+  }
+}
+
+function showInitialScanModal(dirHandle, entries) {
+  scanSub.textContent = dirHandle.name + ' · top level only';
+  scanCount.textContent = entries.length + ' item' + (entries.length === 1 ? '' : 's');
+  scanList.innerHTML = '';
+
+  for (const entry of entries) {
+    const row = document.createElement('label');
+    row.className = 'scan-row';
+    const cb = createCb();
+    cb.checked = true;
+    cb.dataset.name = entry.name;
+    cb.dataset.kind = entry.kind;
+    const kind = document.createElement('span');
+    kind.className = 'scan-kind';
+    kind.textContent = entry.kind === 'directory' ? 'DIR' : 'FILE';
+    const name = document.createElement('span');
+    name.className = 'scan-name';
+    name.textContent = entry.name;
+    row.append(cb, kind, name);
+    scanList.appendChild(row);
+  }
+
+  setModalOpen(scanModal, true);
+  return new Promise(resolve => { scanResolver = resolve; });
+}
+
+function finishInitialScanModal(result) {
+  setModalOpen(scanModal, false);
+  if (!scanResolver) return;
+  const resolve = scanResolver;
+  scanResolver = null;
+  resolve(result);
+}
+
+function setAllScanChecks(checked) {
+  scanList.querySelectorAll('.t-cb').forEach(cb => { cb.checked = checked; });
+}
+
 // ── Events ─────────────────────────────────────────────
 const treeScroll = document.getElementById('treeScroll');
 const outInner   = document.getElementById('outInner');
 const hdrPath    = document.getElementById('hdrPath');
+const appVersion = document.getElementById('appVersion');
 const outMeta    = document.getElementById('outMeta');
 const outputStateEl = document.getElementById('outputState');
 const flash      = document.getElementById('flash');
 const btnOpen    = document.getElementById('btnOpen');
 const btnRefresh = document.getElementById('btnRefresh');
+const btnIgnore  = document.getElementById('btnIgnore');
 const btnGen     = document.getElementById('btnGen');
 const btnCopy    = document.getElementById('btnCopy');
 const btnDownload = document.getElementById('btnDownload');
 const btnSelAll  = document.getElementById('btnSelAll');
 const btnClear   = document.getElementById('btnClear');
-const stFiles    = document.getElementById('stFiles');
-const stSel      = document.getElementById('stSel');
-const stChars    = document.getElementById('stChars');
-const stTok      = document.getElementById('stTok');
+const stSummary  = document.getElementById('stSummary');
 const paneDivider = document.getElementById('paneDivider');
 const mainPane    = document.querySelector('.main');
 const treeModeButtons = [...document.querySelectorAll('[data-tree-mode]')];
+
+const ignoreModal = document.getElementById('ignoreModal');
+const ignoreInput = document.getElementById('ignoreInput');
+const btnIgnoreClose = document.getElementById('btnIgnoreClose');
+const btnIgnoreCancel = document.getElementById('btnIgnoreCancel');
+const btnIgnoreSave = document.getElementById('btnIgnoreSave');
+const btnIgnoreDefaults = document.getElementById('btnIgnoreDefaults');
+
+const scanModal = document.getElementById('scanModal');
+const scanSub = document.getElementById('scanSub');
+const scanCount = document.getElementById('scanCount');
+const scanList = document.getElementById('scanList');
+const btnScanClose = document.getElementById('btnScanClose');
+const btnScanCancel = document.getElementById('btnScanCancel');
+const btnScanStart = document.getElementById('btnScanStart');
+const btnScanAll = document.getElementById('btnScanAll');
+const btnScanNone = document.getElementById('btnScanNone');
 
 if (!('showDirectoryPicker' in window)) {
   document.getElementById('warnBar').style.display = 'block';
@@ -603,11 +906,17 @@ btnOpen.addEventListener('click', async () => {
       startIn: rootHandle || 'desktop'
     });
 
+    const entries = await listTopLevel(nextRootHandle);
+    const choice = await showInitialScanModal(nextRootHandle, entries);
+    if (!choice) return;
+
+    addInitialScanIgnores(choice.excluded);
     markOutputStale();
     rootHandle = nextRootHandle;
     hdrPath.textContent = rootHandle.name;
     hdrPath.classList.add('live');
     btnRefresh.disabled = false;
+    resetOutput();
     await loadFolder();
   } catch(e) {
     if(e.name !== 'AbortError') console.error(e);
@@ -616,23 +925,41 @@ btnOpen.addEventListener('click', async () => {
 
 btnRefresh.addEventListener('click', async () => {
   if (!rootHandle) return;
-  const prev = [...selected];
+  const previous = [...selected];
   markOutputStale();
   btnRefresh.disabled = true;
-  btnRefresh.textContent = 'Refreshing...';
-  await loadFolder();
-  // restore selections that still exist
-  prev.forEach(p => { if (fileMap[p]) selected.add(p); });
-  refreshAllCbs(); updateStatus();
-  btnRefresh.disabled = false;
-  btnRefresh.textContent = '\u21BA Refresh';
+  btnRefresh.textContent = 'Refreshing…';
+  try {
+    await loadFolder(previous);
+  } finally {
+    btnRefresh.disabled = false;
+    btnRefresh.textContent = 'Refresh';
+  }
+});
+
+btnIgnore.addEventListener('click', openIgnoreRules);
+btnIgnoreClose.addEventListener('click', () => setModalOpen(ignoreModal, false));
+btnIgnoreCancel.addEventListener('click', () => setModalOpen(ignoreModal, false));
+btnIgnoreSave.addEventListener('click', saveIgnoreRules);
+btnIgnoreDefaults.addEventListener('click', () => { ignoreInput.value = DEFAULT_IGNORE_RULES; ignoreInput.focus(); });
+ignoreModal.addEventListener('click', e => { if (e.target === ignoreModal) setModalOpen(ignoreModal, false); });
+
+btnScanClose.addEventListener('click', () => finishInitialScanModal(null));
+btnScanCancel.addEventListener('click', () => finishInitialScanModal(null));
+btnScanAll.addEventListener('click', () => setAllScanChecks(true));
+btnScanNone.addEventListener('click', () => setAllScanChecks(false));
+btnScanStart.addEventListener('click', () => {
+  const excluded = [...scanList.querySelectorAll('.t-cb')]
+    .filter(cb => !cb.checked)
+    .map(cb => ({ name:cb.dataset.name, kind:cb.dataset.kind }));
+  finishInitialScanModal({ excluded });
 });
 
 btnGen.addEventListener('click', async () => {
   if (!selected.size || isGenerating) return;
   const versionAtStart = generationVersion;
   isGenerating = true;
-  btnGen.textContent = 'Reading...';
+  btnGen.textContent = 'Reading…';
   updateStatus();
   try {
     const generated = await generateOutput();
@@ -662,18 +989,16 @@ btnCopy.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(outputText);
     flash.style.opacity = '1';
-    setTimeout(() => { flash.style.opacity = '0'; }, 2000);
+    setTimeout(() => { flash.style.opacity = '0'; }, 1600);
   } catch(e) {
-    // fallback
     const ta = document.createElement('textarea');
     ta.value = outputText; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select(); document.execCommand('copy');
     document.body.removeChild(ta);
     flash.style.opacity = '1';
-    setTimeout(() => { flash.style.opacity = '0'; }, 2000);
+    setTimeout(() => { flash.style.opacity = '0'; }, 1600);
   }
 });
-
 
 btnDownload.addEventListener('click', downloadOutput);
 
@@ -689,19 +1014,6 @@ btnClear.addEventListener('click', () => {
   refreshAllCbs(); updateStatus();
 });
 
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', async () => {
-    const key = chip.dataset.f;
-    filters[key] = !filters[key];
-    chip.classList.toggle('on', filters[key]);
-    if (rootHandle) {
-      markOutputStale();
-      await loadFolder();
-    }
-  });
-});
-
-
 treeModeButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     const nextMode = btn.dataset.treeMode;
@@ -716,6 +1028,12 @@ treeModeButtons.forEach(btn => {
   });
 });
 
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (scanModal.classList.contains('open')) finishInitialScanModal(null);
+  else if (ignoreModal.classList.contains('open')) setModalOpen(ignoreModal, false);
+});
+
 paneDivider.addEventListener('pointerdown', e => {
   e.preventDefault();
   paneDivider.setPointerCapture(e.pointerId);
@@ -726,7 +1044,7 @@ paneDivider.addEventListener('pointerdown', e => {
 paneDivider.addEventListener('pointermove', e => {
   if (!paneDivider.hasPointerCapture(e.pointerId)) return;
   const rect = mainPane.getBoundingClientRect();
-  const min = 240;
+  const min = 235;
   const max = Math.max(min, rect.width * 0.45);
   const width = Math.min(max, Math.max(min, e.clientX - rect.left));
   document.documentElement.style.setProperty('--tree-width', width + 'px');
@@ -741,6 +1059,7 @@ function stopDividerDrag(e) {
 paneDivider.addEventListener('pointerup', stopDividerDrag);
 paneDivider.addEventListener('pointercancel', stopDividerDrag);
 
+loadAppVersion();
 updateStatus();
 </script>
 </body>
